@@ -1,8 +1,10 @@
 class LslockTest
   def self.fork(procs, time)
-    procs.times do |f|
+    _procs = procs.to_i 
+    _time = time.to_i
+    _procs.times do |f|
       Process.fork do  
-        new_proc(time)
+        new_proc(_time)
       end
     end
   end
@@ -12,7 +14,8 @@ class LslockTest
       p.write Process.pid 
     end
     sleep time
+    File.rename("/tmp/test/#{Process.pid}.lock", "/tmp/test/#{Process.pid}.expired")
   end
 end
 
-LslockTest.fork(3, 10000)
+LslockTest.fork(ARGV[0], ARGV[1])
